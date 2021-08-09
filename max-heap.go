@@ -9,16 +9,19 @@ type MaxHeap struct {
 	length int
 }
 
-func (h *MaxHeap) maxHeapify(i int) {
-	for root := i; root > 0; root /= 2 {
-		left := root*2
-		right := root*2+1
-		if left <= h.length && h.a[left] > h.a[root] {
-			h.a[root], h.a[left] = h.a[left], h.a[root]
-		}
-		if right <= h.length && h.a[right] > h.a[root] {
-			h.a[root], h.a[right] = h.a[right], h.a[root]
-		}
+func (h *MaxHeap) maxHeapify(p int) {
+	left := p*2
+	largest := p
+	if left <= h.length && h.a[left] > h.a[p] {
+		largest = left
+	}
+        right := left + 1
+	if right <= h.length && h.a[right] > h.a[largest] {
+		largest = right
+	}
+	if largest != p {
+		h.a[p], h.a[largest] = h.a[largest], h.a[p]
+		h.maxHeapify(largest)
 	}
 }
 
@@ -55,7 +58,7 @@ func (h *MaxHeap) ExtractMax() *int {
 	last := h.length
 	h.a[1], h.a[last] = h.a[last], h.a[1]
 	h.length = last - 1
-	h.maxHeapify(h.length/2)
+	h.maxHeapify(1)
 	m := h.a[last]
 	return &m
 }
